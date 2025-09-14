@@ -1,4 +1,5 @@
 org\example\workshop_managment\model\Manager.class
+org\example\workshop_managment\business_services\AdminService.class
 org\example\workshop_managment\controller\AdminController.class
 org\example\workshop_managment\controller\HomeController.class
 org\example\workshop_managment\controller\ManagerController.class
@@ -8,5 +9,7 @@ org\example\workshop_managment\controller\EmployeeController.class
 org\example\workshop_managment\repository\AdminRepository.class
 org\example\workshop_managment\model\Employee.class
 org\example\workshop_managment\repository\EmployeeRepository.class
+org\example\workshop_managment\business_services\ManagerService.class
 org\example\workshop_managment\WorkshopManagmentApplication.class
 org\example\workshop_managment\web\RestExceptionHandler.class
+org\example\workshop_managment\business_services\EmployeeService.class
