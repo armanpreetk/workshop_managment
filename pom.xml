@@ -55,12 +55,7 @@
             <version>2.6.0</version>
         </dependency>
 
-        <!-- Load environment variables from a .env file in the project root -->
-        <dependency>
-            <groupId>me.paulschwarz</groupId>
-            <artifactId>spring-dotenv</artifactId>
-            <version>4.0.0</version>
-        </dependency>
+        <!-- .env loader removed: configuration is hardcoded in application.properties -->
 
         <dependency>
             <groupId>com.mysql</groupId>

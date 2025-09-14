@@ -1,23 +1,23 @@
-# Workshop Management - Dev DB Setup
+# Workshop Management - Cloud DB Setup
 
-This project is preconfigured to run against a local MySQL instance using Docker so every teammate can clone and run without using root.
+This project is hard-wired to use a shared Cloud MySQL instance so every teammate can clone and run without any local DB setup.
 
 ## Quick start
-1. Copy env template and adjust if needed:
-   - Copy `.env.example` to `.env` (or keep the default values)
-2. Start MySQL locally via Docker:
-   - `docker compose up -d`
-3. Run the application:
+1. Run the application:
    - Windows PowerShell: `./mvnw.cmd spring-boot:run`
+2. Open the app at http://localhost:8080 (Swagger at `/swagger-ui/index.html`).
 
-## Connection details (defaults)
-- JDBC URL: `jdbc:mysql://localhost:3306/workshopdb?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true`
-- Username: `workshop`
-- Password: `password`
+## Database configuration (fixed)
+- Host: `mysql-25e0ea5-jivansh34-ed36.d.aivencloud.com`
+- Port: `28577`
+- DB: `defaultdb`
+- JDBC URL: `jdbc:mysql://mysql-25e0ea5-jivansh34-ed36.d.aivencloud.com:28577/defaultdb?sslMode=DISABLED&allowPublicKeyRetrieval=true`
+- Username: `avnadmin`
+- Password: configured in `src/main/resources/application.properties`
 
-These values come from `.env` and `application.properties`. Change them by editing `.env` or setting environment variables.
+Note: TLS is currently disabled (`sslMode=DISABLED`). If your provider requires TLS, switch to `sslMode=VERIFY_IDENTITY` and provide a truststore as documented in comments inside `application.properties`.
 
-## Security notes
-- The app uses a non-root database user by default.
-- Credentials in `.env` are for local development only. Do not commit real secrets.
-- For shared/staging deployments, use a central DB host and secure credentials (VPN, TLS, limited GRANTs).
+## Notes
+- The app no longer uses `.env`. All connection details are in `src/main/resources/application.properties`.
+- Keep this repository private to avoid leaking credentials. GitHub may block pushes with detected secrets.
+- Consider rotating the DB password if it has been shared or previously committed.
