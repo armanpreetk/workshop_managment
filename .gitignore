@@ -1,0 +1,17 @@
+# Ignore environment files and secrets
+.env
+.env.*
+
+# Build outputs
+target/
+*.log
+
+# IDE/editor settings
+.idea/
+.vscode/
+
+# Certificates/keystores (keep out of git unless intentionally shared)
+*.jks
+*.p12
+*.pem
+*.crt
