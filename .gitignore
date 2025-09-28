@@ -43,3 +43,7 @@ node_modules/
 **/.env
 !.env.example
 !**/.env.example
+
+### Certificates / Truststores ###
+# Avoid committing truststore/keystore files
+aiven-truststore.jks
