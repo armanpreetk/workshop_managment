@@ -36,3 +36,10 @@ build/
 # Ignore node dependencies everywhere (e.g., frontend/)
 node_modules/
 **/node_modules/
+
+### Environment files (secrets) ###
+# Never commit real environment files; use the provided .env.example templates
+.env
+**/.env
+!.env.example
+!**/.env.example
