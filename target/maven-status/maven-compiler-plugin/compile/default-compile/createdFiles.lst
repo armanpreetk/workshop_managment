@@ -2,6 +2,8 @@ org\example\workshop_managment\controller\HomeController.class
 org\example\workshop_managment\config\AdminInitializer.class
 org\example\workshop_managment\model\Admin.class
 org\example\workshop_managment\repository\ManagerRepository.class
+org\example\workshop_managment\repository\TaskRepository.class
+org\example\workshop_managment\business_services\TaskService.class
 org\example\workshop_managment\controller\EmployeeController.class
 org\example\workshop_managment\model\Employee.class
 org\example\workshop_managment\business_services\ManagerService.class
@@ -17,6 +19,7 @@ org\example\workshop_managment\controller\ManagerController.class
 org\example\workshop_managment\security\JwtUtil.class
 org\example\workshop_managment\repository\AdminRepository.class
 org\example\workshop_managment\repository\EmployeeRepository.class
+org\example\workshop_managment\model\WorkshopItem.class
 org\example\workshop_managment\controller\JwtAuthController.class
 org\example\workshop_managment\controller\TaskController.class
 org\example\workshop_managment\WorkshopManagmentApplication.class

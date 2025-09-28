@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Workshop Inventory Status</title>
+</head>
+<body>
+
+<h1 th:text="${welcomeMessage}">Loading Welcome Message...</h1>
+
+<h2>Current Item Status (Model Data):</h2>
+
+<ul>
+    <li>
+        <strong>Item Name:</strong> <span th:text="${workshopItem.name}">Item Placeholder</span>
+    </li>
+    <li>
+        <strong>Stock Count:</strong> <span th:text="${workshopItem.quantity}">Quantity Placeholder</span>
+    </li>
+</ul>
+
+<p>This HTML page serves as the **View (V)** in your MVC application.</p>
+
+</body>
+</html>
