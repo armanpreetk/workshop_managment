@@ -1,17 +1,38 @@
-# Ignore environment files and secrets
-.env
-.env.*
-
-# Build outputs
+HELP.md
 target/
-*.log
+.mvn/wrapper/maven-wrapper.jar
+!**/src/main/**/target/
+!**/src/test/**/target/
 
-# IDE/editor settings
-.idea/
+### STS ###
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+
+### IntelliJ IDEA ###
+.idea
+*.iws
+*.iml
+*.ipr
+
+### NetBeans ###
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+build/
+!**/src/main/**/build/
+!**/src/test/**/build/
+
+### VS Code ###
 .vscode/
 
-# Certificates/keystores (keep out of git unless intentionally shared)
-*.jks
-*.p12
-*.pem
-*.crt
+### Node / Frontend ###
+# Ignore node dependencies everywhere (e.g., frontend/)
+node_modules/
+**/node_modules/

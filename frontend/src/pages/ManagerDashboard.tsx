@@ -1,5 +1,6 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, ChangeEvent } from 'react';
 import { api, useAuth } from '../auth/AuthContext';
+import Select from '../components/Select';
 import Card from '../components/Card';
 import Input from '../components/Input';
 import Button from '../components/Button';
@@ -24,6 +25,10 @@ export default function ManagerDashboard() {
   const [apiError, setApiError] = useState<string | null>(null);
   const [apiSuccess, setApiSuccess] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+
+  type Task = { id: number; title: string; description?: string; status: 'PENDING'|'DONE'; employee: Employee; dueDate?: string };
+  const [tasks, setTasks] = useState<Task[]>([]);
+  const [taskForm, setTaskForm] = useState<{ employeeId: number | ''; title: string; description: string; dueDate: string }>({ employeeId: '', title: '', description: '', dueDate: '' });
   
   // Modal states
   const [employeeToEdit, setEmployeeToEdit] = useState<Employee | null>(null);
@@ -70,9 +75,16 @@ export default function ManagerDashboard() {
     }
   };
 
-  useEffect(() => {
-    loadEmployees();
-  }, []);
+  const loadTasks = async () => {
+    try {
+      const res = await api.get('/api/tasks/manager/me');
+      setTasks(res.data);
+    } catch (err: any) {
+      // non-blocking
+    }
+  };
+
+  useEffect(() => { loadEmployees(); loadTasks(); }, []);
 
   const validateEmployee = (employee: Employee) => {
     const newErrors: Record<string, string> = {};
@@ -214,6 +226,69 @@ export default function ManagerDashboard() {
                 Add Employee
               </Button>
             </div>
+          </Card>
+        </div>
+
+        {/* Task Assignment */}
+        <div className="mb-8">
+          <Card title="Assign Task" className="mb-6">
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+              <Select
+                label="Employee"
+                value={taskForm.employeeId}
+                onChange={(e: ChangeEvent<HTMLSelectElement>) => setTaskForm({ ...taskForm, employeeId: e.target.value ? Number(e.target.value) : '' })}
+                options={[{ value: '', label: 'Select Employee' }, ...employees.map(emp => ({ value: emp.id, label: `${emp.name} (${emp.email})` }))]}
+                fullWidth
+              />
+              <Input label="Title" value={taskForm.title} onChange={(e) => setTaskForm({ ...taskForm, title: e.target.value })} fullWidth />
+              <Input 
+                label="Due Date"
+                type="datetime-local"
+                value={taskForm.dueDate}
+                onChange={(e) => setTaskForm({ ...taskForm, dueDate: e.target.value })}
+                fullWidth 
+              />
+              <Input label="Description" value={taskForm.description} onChange={(e) => setTaskForm({ ...taskForm, description: e.target.value })} fullWidth />
+            </div>
+            <div className="flex justify-end">
+              <Button
+                variant="primary"
+                onClick={async () => {
+                  if (!taskForm.employeeId || !taskForm.title) { setApiError('Employee and title are required'); return; }
+                  try {
+                    setIsLoading(true);
+                    const dueIso = taskForm.dueDate ? new Date(taskForm.dueDate).toISOString() : undefined;
+                    await api.post('/api/tasks', { employeeId: taskForm.employeeId, title: taskForm.title, description: taskForm.description, dueDate: dueIso });
+                    setTaskForm({ employeeId: '', title: '', description: '', dueDate: '' });
+                    setApiSuccess('Task assigned successfully');
+                    await loadTasks();
+                  } catch (err: any) {
+                    handleApiError(err, 'Failed to assign task');
+                  } finally {
+                    setIsLoading(false);
+                  }
+                }}
+                isLoading={isLoading}
+              >Assign Task</Button>
+            </div>
+          </Card>
+
+          <Card title="Team Tasks">
+            <Table headers={["Title", "Employee", "Status", "Due Date"]}>
+              {tasks.map(t => (
+                <TableRow key={t.id}>
+                  <TableCell>{t.title}</TableCell>
+                  <TableCell>{t.employee?.name}</TableCell>
+                  <TableCell>{t.status}</TableCell>
+                  <TableCell>{t.dueDate || '-'}</TableCell>
+                </TableRow>
+              ))}
+              {tasks.length === 0 && (
+                <TableRow>
+                  <TableCell colSpan={4} className="text-center text-gray-500">No tasks yet</TableCell>
+                </TableRow>
+              )}
+            </Table>
           </Card>
         </div>
         

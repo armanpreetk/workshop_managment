@@ -23,7 +23,6 @@ public class AdminService {
         this.managerRepository = managerRepository;
     }
 
-    // CRUD Operations
     @Transactional
     public Admin createAdmin(Admin admin) {
         return adminRepository.save(admin);
@@ -52,7 +51,6 @@ public class AdminService {
         adminRepository.deleteById(id);
     }
 
-    // Manager Management for Admin
     @Transactional
     public Admin addManagerToAdmin(Long adminId, Long managerId) {
         Admin admin = adminRepository.findById(adminId)

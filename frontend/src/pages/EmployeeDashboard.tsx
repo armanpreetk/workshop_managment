@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { api, useAuth } from '../auth/AuthContext';
 import Card from '../components/Card';
+import Button from '../components/Button';
 import Table, { TableRow, TableCell } from '../components/Table';
 import Alert from '../components/Alert';
 import Navbar from '../components/Navbar';
@@ -17,6 +18,8 @@ export default function EmployeeDashboard() {
   const [team, setTeam] = useState<Employee[]>([]);
   const [apiError, setApiError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  type Task = { id: number; title: string; description?: string; status: 'PENDING'|'DONE'; dueDate?: string };
+  const [tasks, setTasks] = useState<Task[]>([]);
 
   // Helper function to process error messages
   const handleApiError = (err: any, defaultMessage: string) => {
@@ -56,9 +59,14 @@ export default function EmployeeDashboard() {
     }
   };
 
-  useEffect(() => {
-    loadData();
-  }, []);
+  const loadTasks = async () => {
+    try {
+      const res = await api.get('/api/tasks/employee/me');
+      setTasks(res.data);
+    } catch {}
+  };
+
+  useEffect(() => { loadData(); loadTasks(); }, []);
 
   return (
     <div className="min-h-screen bg-gray-100">
@@ -123,6 +131,36 @@ export default function EmployeeDashboard() {
           </Card>
         </div>
         
+        {/* Tasks */}
+        <Card title="My Tasks" className="mb-8">
+          <Table headers={["Title", "Status", "Due Date", "Actions"]}>
+            {tasks.map(t => (
+              <TableRow key={t.id}>
+                <TableCell>{t.title}</TableCell>
+                <TableCell>{t.status}</TableCell>
+                <TableCell>{t.dueDate || '-'}</TableCell>
+                <TableCell>
+                  {t.status === 'PENDING' && (
+                    <Button variant="primary" size="sm" onClick={async () => {
+                      try {
+                        await api.post(`/api/tasks/${t.id}/done`);
+                        await loadTasks();
+                      } catch (err: any) {
+                        setApiError(err?.response?.data?.message || 'Failed to complete task');
+                      }
+                    }}>Mark done</Button>
+                  )}
+                </TableCell>
+              </TableRow>
+            ))}
+            {tasks.length === 0 && (
+              <TableRow>
+                <TableCell colSpan={4} className="text-center text-gray-500">No tasks assigned</TableCell>
+              </TableRow>
+            )}
+          </Table>
+        </Card>
+
         {/* Team */}
         <Card title="My Team">
           <p className="text-gray-600 mb-4">

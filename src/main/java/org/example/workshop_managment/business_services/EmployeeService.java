@@ -19,9 +19,11 @@ public class EmployeeService {
         this.employeeRepository = employeeRepository;
     }
 
-    // CRUD Operations
     @Transactional
     public Employee createEmployee(Employee employee) {
+        if (employee.getId() != null) {
+            employee.setId(null);
+        }
         return employeeRepository.save(employee);
     }
 
@@ -35,12 +37,14 @@ public class EmployeeService {
 
     @Transactional
     public Employee updateEmployee(Long id, Employee employeeDetails) {
-        return employeeRepository.findById(id).map(employee -> {
-            employee.setName(employeeDetails.getName());
-            employee.setEmail(employeeDetails.getEmail());
-            employee.setPassword(employeeDetails.getPassword());
-            return employeeRepository.save(employee);
-        }).orElseThrow(() -> new RuntimeException("Employee not found with id " + id));
+        Employee existingEmployee = employeeRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Employee not found with id " + id));
+            
+        existingEmployee.setName(employeeDetails.getName());
+        existingEmployee.setEmail(employeeDetails.getEmail());
+        existingEmployee.setPassword(employeeDetails.getPassword());
+            
+        return employeeRepository.save(existingEmployee);
     }
 
     @Transactional

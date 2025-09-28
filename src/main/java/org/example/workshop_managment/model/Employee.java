@@ -2,6 +2,8 @@ package org.example.workshop_managment.model;
 
 import jakarta.persistence.*;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
 
 @Entity
 @Table(name = "employees")
@@ -11,12 +13,16 @@ public class Employee {
     private Long id;
 
     @Column(nullable = false)
+    @NotBlank(message = "name is required")
     private String name;
 
     @Column(nullable = false, unique = true)
+    @NotBlank(message = "email is required")
+    @Email(message = "email must be valid")
     private String email;
 
     @Column(nullable = false)
+    @NotBlank(message = "password is required")
     private String password;
 
     @ManyToOne(fetch = FetchType.LAZY)
